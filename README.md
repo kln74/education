@@ -1,3 +1,3 @@
 # Education
 ## Homework
-+ [DZ_1](https://github.com/kln74/education/tree/main/DZ/DZ_1)
++ [Проектирование БД](https://github.com/kln74/education/tree/main/DZ/DZ_1)
