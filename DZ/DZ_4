@@ -82,10 +82,10 @@ CREATE TABLE online_store.Order_Status (
 CREATE ROLE  admin WITH PASSWORD 'admin';
 ALTER ROLE admin LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION;
 GRANT ALL PRIVILEGES ON DATABASE online_store TO admin;
-GRANT ALL PRIVILEGES ON SCHEMA online_store_schema TO admin;
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA online_store_schema TO admin;
-GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA online_store_schema TO Admin;
-GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA online_store_schema TO Admin;
+GRANT ALL PRIVILEGES ON SCHEMA online_store TO admin;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA online_store TO admin;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA online_store TO Admin;
+GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA online_store TO Admin;
 
 CREATE ROLE Manager NOLOGIN NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;
 GRANT SELECT ON ALL TABLES IN SCHEMA online_store TO Manager;
@@ -95,7 +95,7 @@ GRANT UPDATE ON online_store.Categorie TO Manager;
 GRANT UPDATE ON online_store.Supplier To Manager;
 GRANT UPDATE ON online_store.Manufacturer To Manager;
 GRANT UPDATE ON online_store.Customer To Manager;
-GRANT UPDATE ON online_store.Order To Manager;
+GRANT UPDATE ON online_store.Orders To Manager;
 GRANT UPDATE ON online_store.Order_item To Manager;
 GRANT UPDATE ON online_store.Order_status To Manager;
 
