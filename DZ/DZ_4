@@ -1,1 +1,104 @@
 
+CREATE TABLESPACE ts LOCATION '/home/postgres/tmptablespace';
+CREATE DATABASE online_store TABLESPACE ts;
+
+CREATE SCHEMA IF NOT EXISTS online_store AUTHORIZATION postgres;
+SET search_path TO online_store;
+
+CREATE TABLE online_store.Categorie (
+    category_id INT PRIMARY KEY,
+    name VARCHAR(255),
+    description TEXT,
+    creation_date TIMESTAMP
+);
+
+CREATE TABLE online_store.Manufacturer (
+    manufacturer_id INT PRIMARY KEY,
+    name VARCHAR(255),
+    address TEXT,
+    phone VARCHAR(20),
+    logo VARCHAR(255),
+    creation_date TIMESTAMP
+);
+
+CREATE TABLE online_store.Price (
+    price_id INT PRIMARY KEY,
+    price DECIMAL(10, 2),
+    start_date TIMESTAMP,
+    end_date TIMESTAMP,
+  product_id INT REFERENCES online_store.product(product_id) ON DELETE CASCADE
+);
+
+CREATE TABLE online_store.Product (
+    product_id INT PRIMARY KEY,
+    name VARCHAR(255),
+    description TEXT
+);
+
+ALTER TABLE online_store.Product
+ADD CONSTRAINT category_id
+FOREIGN KEY (category_id)
+REFERENCES online_store.categorie(category_id);
+
+ALTER TABLE online_store.Product
+ADD CONSTRAINT manufacturer_id
+FOREIGN KEY (manufacturer_id)
+REFERENCES online_store.manufacturer(manufacturer_id);
+
+ALTER TABLE online_store.Product
+ADD CONSTRAINT price_id
+FOREIGN KEY (price_id)
+REFERENCES online_store.price(price_id);
+
+CREATE TABLE online_store.Customer (
+    customer_id INT PRIMARY KEY,
+    full_name VARCHAR(255),
+    email VARCHAR(255),
+    address TEXT,
+    registration_date TIMESTAMP,
+    last_login_date TIMESTAMP
+);
+
+CREATE TABLE online_store.Orders (
+    order_id INT PRIMARY KEY,
+    order_date TIMESTAMP,
+    customer_id INT REFERENCES online_store.customer(customer_id) ON DELETE CASCADE,
+    order_status_id INT REFERENCES online_store.Order_Status(order_status_id) ON DELETE CASCADE
+);
+
+CREATE TABLE online_store.Order_Item (
+    order_item_id INT PRIMARY KEY,
+    quantity INT,
+    price DECIMAL(10, 2),
+  order_id INT REFERENCES online_store.orders(order_id) ON DELETE CASCADE,
+  product_id INT REFERENCES online_store.product(product_id) ON DELETE CASCADE
+);
+
+CREATE TABLE online_store.Order_Status (
+    order_status_id INT PRIMARY KEY,
+    status_name VARCHAR(50)
+);
+
+CREATE ROLE  admin WITH PASSWORD 'admin';
+ALTER ROLE admin LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION;
+GRANT ALL PRIVILEGES ON DATABASE online_store TO admin;
+GRANT ALL PRIVILEGES ON SCHEMA online_store_schema TO admin;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA online_store_schema TO admin;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA online_store_schema TO Admin;
+GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA online_store_schema TO Admin;
+
+CREATE ROLE Manager NOLOGIN NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;
+GRANT SELECT ON ALL TABLES IN SCHEMA online_store TO Manager;
+GRANT UPDATE ON online_store.Price TO Manager;
+GRANT UPDATE ON online_store.Product TO Manager;
+GRANT UPDATE ON online_store.Categorie TO Manager;
+GRANT UPDATE ON online_store.Supplier To Manager;
+GRANT UPDATE ON online_store.Manufacturer To Manager;
+GRANT UPDATE ON online_store.Customer To Manager;
+GRANT UPDATE ON online_store.Order To Manager;
+GRANT UPDATE ON online_store.Order_item To Manager;
+GRANT UPDATE ON online_store.Order_status To Manager;
+
+CREATE ROLE customer WITH PASSWORD 'customer';
+ALTER ROLE customer NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION;
+GRANT SELECT ON ALL TABLES IN SCHEMA online_store TO customer;
