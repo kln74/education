@@ -4,4 +4,4 @@
 + [Добавляем в модель данных дополнительные индексы и ограничения](https://github.com/kln74/education/tree/main/DZ/DZ_2)
 + [Установка СУБД PostgreSQL](https://github.com/kln74/education/tree/main/DZ/DZ_3)
 + [DDL скрипты для postgres](https://github.com/kln74/education/blob/main/DZ/DZ_4)
-+ [Посчитать кол-во очков по всем игрокам за текущий год и за предыдущий.](https://github.com/kln74/education/blob/main/DZ/DZ_8)
++ [Посчитать кол-во очков по всем игрокам за текущий год и за предыдущий.](https://github.com/kln74/education/blob/main/DZ/DZ_7)
