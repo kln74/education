@@ -46,3 +46,11 @@ USING Customers
 WHERE Orders.customer_id = Customers.id
   AND Customers.full_name = 'John Deere';
 
+
+Задание со *:
+Приведите пример использования утилиты COPY
+
+COPY (SELECT customer_id, full_name, email FROM Customers) TO 'tmp/customers.csv' DELIMITER ',' CSV HEADER;
+
+COPY Customers FROM 'tmp/customers.csv' DELIMITER ',' CSV HEADER;
+
