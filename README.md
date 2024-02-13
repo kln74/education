@@ -5,4 +5,5 @@
 + [Установка СУБД PostgreSQL](https://github.com/kln74/education/tree/main/DZ/DZ_3)
 + [DDL скрипты для postgres](https://github.com/kln74/education/blob/main/DZ/DZ_4)
 + [DML в PostgreSQL](https://github.com/kln74/education/blob/main/DZ/DZ_5)
++ [Индексы PostgreSQL](https://github.com/kln74/education/blob/main/DZ/DZ_6)
 + [Посчитать кол-во очков по всем игрокам за текущий год и за предыдущий.](https://github.com/kln74/education/blob/main/DZ/DZ_7)
