@@ -1,7 +1,20 @@
 1. Создать индекс к какой-либо из таблиц вашей БД
+CREATE INDEX customer_email_index ON customer (email);
+
+
 2. Прислать текстом результат команды explain, в которой используется данный индекс
+explain select * from customer where email = 'MARY.SMITH@sakilacustomer.org'
+
+"Index Scan using cust_email_index on customer  (cost=0.28..8.29 rows=1 width=74)"
+"  Index Cond: ((email)::text = 'MARY.SMITH@sakilacustomer.org'::text)"
+
+
 3. Реализовать индекс для полнотекстового поиска
-4. Реализовать индекс на часть таблицы или индекс на поле с функцией
+ALTER TABLE customer ADD COLUMN desc_lex tsvector;
+UPDATE customer
+SET desc_lex = to_tsvector(description);
+SELECT name, desc_lex FROM customer;
+
+
 5. Создать индекс на несколько полей
-6. Написать комментарии к каждому из индексов
-7. Описать что и как делали и с какими проблемами столкнулись
+CREATE INDEX customer_composite_index ON customer (first_name, last_name, email);
