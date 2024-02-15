@@ -16,5 +16,12 @@ SET desc_lex = to_tsvector(description);
 SELECT name, desc_lex FROM customer;
 
 
+4. Реализовать индекс на часть таблицы или индекс на поле с функцией.
+CREATE INDEX IF NOT EXISTS customer_index_first_name ON customer (char_length(first_name));
+ANALYZE customer;
+EXPLAIN (costs, verbose, format json, analyze)
+SELECT * FROM customer WHERE  char_length(first_name) > 8
+
+
 5. Создать индекс на несколько полей
 CREATE INDEX customer_composite_index ON customer (first_name, last_name, email);
