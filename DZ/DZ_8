@@ -5,6 +5,8 @@
 Репликация должна работать использую "слот репликации"
 Реплика должна отставать от мастера на 5 минут
 
+pg_lsclusters
+sudo -u postgres psql
 show wal_level;
 alter system set wal_level = replica;
 select pg_create_physical_replication_slot('standby_slot'); 
