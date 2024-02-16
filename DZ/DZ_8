@@ -32,8 +32,11 @@ sudo pg_ctlcluster 16 main2 restart
 
 sudo pg_createcluster -d /var/lib/postgresql/16/main3 16 main3 -- port 5434
 sudo rm -rf /var/lib/postgresql/16/main3
-sudo -u postgres pg_basebackup -p 5432 -R -D /var/lib/postgresql/16/main3 
+sudo -u postgres pg_basebackup -p 5432 -R -D /var/lib/postgresql/16/main3
+sudo pg_ctlcluster 16 main3 start
 sudo pg_ctlcluster 16 main3 promote -- сделал мастером
+ALTER SYSTEM SET wal_level = logical;
+sudo pg_ctlcluster 16 main3 restart
 
 CREATE DATABASE test;
 CREATE TABLE mytable (
@@ -42,13 +45,21 @@ CREATE TABLE mytable (
 );
 INSERT INTO mytable (name) VALUES ('John'), ('Jane'), ('Bob');
 
-ALTER SYSTEM SET wal_level = logical;
-sudo pg_ctlcluster 16 main3 restart
 CREATE PUBLICATION test_pub FOR TABLE mytable;
-
+\dRp+
+\password 
+123456
 
 sudo pg_createcluster -d /var/lib/postgresql/16/main4 16 main4 -- port 5435
 sudo rm -rf /var/lib/postgresql/16/main4
 sudo -u postgres pg_basebackup -p 5434 -R -D /var/lib/postgresql/16/main4
+sudo pg_ctlcluster 16 main4 start
+sudo -u postgres psql -p 5435
 
+CREATE SUBSCRIPTION test_pub
+CONNECTION 'host=localhost port=5434 user=postgres password=123456 dbname=test' 
+PUBLICATION db_pub  WITH (copy_data = true);
+
+-- на данном этапе показывает "ОШИБКА: в транзакции в режиме "только чтение" нельзя выполнить CREATE SUBSCRIPTION"
+-- Гугл мне не помог. Не знаю как исправить ошибку. 
 
