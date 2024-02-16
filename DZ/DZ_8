@@ -12,7 +12,7 @@ alter system set wal_level = replica;
 select pg_create_physical_replication_slot('standby_slot'); 
 sudo pg_ctlcluster 16 main restart
 
-sudo pg_createcluster -d /var/lib/postgresql/16/main2 16 main2
+sudo pg_createcluster -d /var/lib/postgresql/16/main2 16 main2 -- port 5433
 sudo rm -rf /var/lib/postgresql/16/main2
 sudo -u postgres pg_basebackup -p 5432 -R -D /var/lib/postgresql/16/main2
 
@@ -29,3 +29,10 @@ sudo pg_ctlcluster 16 main2 restart
 На нем же создать публикацию этой таблицы
 На новом кластере подписаться на эту публикацию
 Убедиться что она среплицировалась. Добавить записи в эту таблицу на основном сервере и убедиться, что они видны на логической реплике
+
+sudo pg_createcluster -d /var/lib/postgresql/16/main3 16 main3 -- port 5434
+sudo rm -rf /var/lib/postgresql/16/main3
+sudo -u postgres pg_basebackup -p 5432 -R -D /var/lib/postgresql/16/main3
+
+sudo pg_ctlcluster 16 main3 start
+sudo -u postgres psql -p 5434
