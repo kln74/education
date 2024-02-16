@@ -1,1 +1,29 @@
+Физическая репликация:
 
+Весь стенд собирается в Docker образах или ВМ. Необходимо:
+Настроить физическую репликации между двумя кластерами базы данных
+Репликация должна работать использую "слот репликации"
+Реплика должна отставать от мастера на 5 минут
+
+show wal_level;
+alter system set wal_level = replica;
+select pg_create_physical_replication_slot('standby_slot'); 
+sudo pg_ctlcluster 16 main restart
+
+sudo pg_createcluster -d /var/lib/postgresql/16/main2 16 main2
+sudo rm -rf /var/lib/postgresql/16/main2
+sudo -u postgres pg_basebackup -p 5432 -R -D /var/lib/postgresql/16/main2
+
+sudo pg_ctlcluster 16 main2 start
+sudo -u postgres psql -p 5433
+alter system set primary_slot_name = 'standby_slot';
+alter system set recovery_min_apply_delay to '5min'; 
+sudo pg_ctlcluster 16 main2 restart 
+
+Логическая репликация:
+
+В стенд добавить еще один кластер Postgresql. Необходимо:
+Создать на первом кластере базу данных, таблицу и наполнить ее данными (на ваше усмотрение)
+На нем же создать публикацию этой таблицы
+На новом кластере подписаться на эту публикацию
+Убедиться что она среплицировалась. Добавить записи в эту таблицу на основном сервере и убедиться, что они видны на логической реплике
