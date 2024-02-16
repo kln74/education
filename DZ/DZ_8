@@ -32,13 +32,23 @@ sudo pg_ctlcluster 16 main2 restart
 
 sudo pg_createcluster -d /var/lib/postgresql/16/main3 16 main3 -- port 5434
 sudo rm -rf /var/lib/postgresql/16/main3
-sudo -u postgres pg_basebackup -p 5432 -R -D /var/lib/postgresql/16/main3
+sudo -u postgres pg_basebackup -p 5432 -R -D /var/lib/postgresql/16/main3 
+sudo pg_ctlcluster 16 main3 promote -- сделал мастером
 
-sudo pg_ctlcluster 16 main3 start
-sudo -u postgres psql -p 5434
+CREATE DATABASE test;
+CREATE TABLE mytable (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50)
+);
+INSERT INTO mytable (name) VALUES ('John'), ('Jane'), ('Bob');
+
+ALTER SYSTEM SET wal_level = logical;
+sudo pg_ctlcluster 16 main3 restart
+CREATE PUBLICATION test_pub FOR TABLE mytable;
+
 
 sudo pg_createcluster -d /var/lib/postgresql/16/main4 16 main4 -- port 5435
 sudo rm -rf /var/lib/postgresql/16/main4
-sudo -u postgres pg_basebackup -p 5434 -R -D /var/lib/postgresql/16/main4 --5434?
+sudo -u postgres pg_basebackup -p 5434 -R -D /var/lib/postgresql/16/main4
 
 
