@@ -8,3 +8,4 @@
 + [Индексы PostgreSQL](https://github.com/kln74/education/blob/main/DZ/DZ_6)
 + [Посчитать кол-во очков по всем игрокам за текущий год и за предыдущий.](https://github.com/kln74/education/blob/main/DZ/DZ_7)
 + [Делаем физическую и логическую репликации](https://github.com/kln74/education/blob/main/DZ/DZ_8)
++ [Создаем базу данных MySQL в докере](https://github.com/kln74/education/blob/main/DZ/DZ_9)
