@@ -1,1 +1,80 @@
+--Описание/Пошаговая инструкция выполнения домашнего задания:
+
+--забрать стартовый репозиторий https://github.com/aeuge/otus-mysql-docker
+--прописать sql скрипт для создания своей БД в init.sql
+--проверить запуск и работу контейнера следую описанию в репозитории
+
+
+kirill@kirill-H410M-S2-V2:~$ cd /home/kirill/mysql
+kirill@kirill-H410M-S2-V2:~/mysql$ 
+kirill@kirill-H410M-S2-V2:~/mysql$ ls -l
+итого 16
+drwxrwxr-x 2 kirill kirill 4096 фев 22 22:36 custom.conf
+-rw-rw-r-- 1 kirill kirill  339 фев 22 22:34 docker-compose.yml
+-rw-rw-r-- 1 kirill kirill   32 фев 22 22:34 init.sql
+-rw-rw-r-- 1 kirill kirill  416 фев 22 22:34 README.md
+
+kirill@kirill-H410M-S2-V2:~/mysql$ docker-compose up -d
+Pulling otusdb (mysql:8.0.15)...
+8.0.15: Pulling from library/mysql
+27833a3ba0a5: Pull complete
+864c283b3c4b: Pull complete
+cea281b2278b: Pull complete
+8f856c14f5af: Pull complete
+9c4f38c23b6f: Pull complete
+1b810e1751b3: Pull complete
+5479aaef3d30: Pull complete
+ded8fa2e1614: Pull complete
+636033ba4d2e: Pull complete
+902e6010661d: Pull complete
+dbe44d2bf055: Pull complete
+e906385f419d: Pull complete
+Digest: sha256:a7cf659a764732a27963429a87eccc8457e6d4af0ee9d5140a3b56e74986eed7
+Status: Downloaded newer image for mysql:8.0.15
+Creating mysql_otusdb_1 ... done
+
+kirill@kirill-H410M-S2-V2:~/mysql$ docker-compose ps
+     Name                 Command             State             Ports           
+--------------------------------------------------------------------------------
+mysql_otusdb_1   docker-entrypoint.sh --ini   Up      0.0.0.0:3309->3306/tcp,:::
+                 ...                                  3309->3306/tcp, 33060/tcp 
+
+kirill@kirill-H410M-S2-V2:~/mysql$ docker exec -it mysql_otusdb_1 bash
+root@a2a429a602e9:/# 
+root@a2a429a602e9:/# 
+root@a2a429a602e9:/# mysql -u root -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 13
+Server version: 8.0.15 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> 
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '123456';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> FLUSH PRIVILEGES;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> 
+mysql> USE otus;
+Database changed
+mysql> 
+
+
+
+
+
+
+
 
