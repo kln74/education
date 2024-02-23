@@ -45,7 +45,7 @@ CREATE TABLE mytable (
 );
 INSERT INTO mytable (name) VALUES ('John'), ('Jane'), ('Bob');
 
-CREATE PUBLICATION test_pub FOR TABLE mytable;
+CREATE PUBLICATION db_pub FOR TABLE mytable;
 \dRp+
 \password 
 123456
@@ -62,4 +62,27 @@ PUBLICATION db_pub  WITH (copy_data = true);
 
 -- на данном этапе показывает "ОШИБКА: в транзакции в режиме "только чтение" нельзя выполнить CREATE SUBSCRIPTION"
 -- Гугл мне не помог. Не знаю как исправить ошибку. 
+
+--Продолжил. 
+
+sudo pg_ctlcluster 16 main4 promote
+sudo pg_ctlcluster 16 main4 restart
+sudo -u postgres psql -p 5435
+\c test
+
+CREATE SUBSCRIPTION test_pub
+CONNECTION 'host=localhost port=5434 user=postgres password=123456 dbname=test' 
+PUBLICATION db_pub  WITH (copy_data = true);
+
+\dRs
+              Список подписок
+   Имя    | Владелец | Включён | Публикация 
+----------+----------+---------+------------
+ test_pub | postgres | t       | {db_pub}
+(1 строка)
+
+
+
+
+
 
