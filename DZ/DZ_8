@@ -60,11 +60,6 @@ CREATE SUBSCRIPTION test_pub
 CONNECTION 'host=localhost port=5434 user=postgres password=123456 dbname=test' 
 PUBLICATION db_pub  WITH (copy_data = true);
 
--- на данном этапе показывает "ОШИБКА: в транзакции в режиме "только чтение" нельзя выполнить CREATE SUBSCRIPTION"
--- Гугл мне не помог. Не знаю как исправить ошибку. 
-
---Продолжил. 
-
 sudo pg_ctlcluster 16 main4 promote
 sudo pg_ctlcluster 16 main4 restart
 sudo -u postgres psql -p 5435
@@ -80,9 +75,4 @@ PUBLICATION db_pub  WITH (copy_data = true);
 ----------+----------+---------+------------
  test_pub | postgres | t       | {db_pub}
 (1 строка)
-
-
-
-
-
 
