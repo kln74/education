@@ -1,0 +1,45 @@
+1. Типы данных.
+
+| Поле                    | Название таблицы | PK/FK | Тип данных     |
+|:----------------------- |:----------------:|:-----:|:--------------:|
+| order_status_id         | Order_Status     |  PK   | INT            |
+| status_name             | Order_Status     |       | VARCHAR(50)    |
+| category_id             | Categorie        |  PK   | INT            |
+| name                    | Categorie        |       | VARCHAR(255)   |
+| description             | Categorie        |       | TEXT           |
+| creation_date           | Categorie        |       | TIMESTAMP      |
+| product_id              | Product          |  PK   | INT            |
+| name                    | Product          |       | VARCHAR(255)   |
+| category_id             | Product          |  FK   | INT            |
+| manufacturer_id         | Product          |  FK   | INT            |
+| price_id                | Product          |  FK   | INT            |
+| manufacturer_id         | Manufacturer     |  PK   | INT            |
+| name                    | Manufacturer     |       | VARCHAR(255)   |
+| address                 | Manufacturer     |       | TEXT           |
+| phone                   | Manufacturer     |       | VARCHAR(20)    |
+| logo                    | Manufacturer     |       | VARCHAR(255)   |
+| creation_date           | Manufacturer     |       | TIMESTAMP      |
+| price_id                | Price            |  PK   | INT            |
+| price                   | Price            |       | DECIMAL(10, 2) |
+| start_date              | Price            |       | TIMESTAMP      |
+| end_date                | Price            |       | TIMESTAMP      |
+| price_id                | Price            |       | INT            |
+| customer_id             | Customer         |  PK   | INT            |
+| full_name               | Customer         |       | VARCHAR(255)   |
+| email                   | Customer         |       | VARCHAR(255)   |
+| address                 | Customer         |       | TEXT           |
+| registration_date       | Customer         |       | TIMESTAMP      |
+| last_login_date         | Customer         |       | TIMESTAMP      |
+| order_id                | Orders           |  PK   | INT            |
+| order_date              | Orders           |       | TIMESTAMP      |
+| customer_id             | Orders           |  FK   | INT            |
+| order_status_id         | Orders           |  FK   | INT            |
+| order_item_id           | Order_Item       |  PK   | INT            |
+| quantity                | Order_Item       |       | INT            |
+| price                   | Order_Item       |       | DECIMAL(10, 2) |
+| order_id                | Order_Item       |  FK   | INT            |
+| product_id              | Order_Item       |  FK   | INT            |
+
+
+
+
