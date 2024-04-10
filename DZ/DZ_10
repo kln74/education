@@ -13,6 +13,7 @@
 | category_id             | Product          |  FK   | INT            |
 | manufacturer_id         | Product          |  FK   | INT            |
 | price_id                | Product          |  FK   | INT            |
+| quantity                | Product          |       | INT            |
 | manufacturer_id         | Manufacturer     |  PK   | INT            |
 | name                    | Manufacturer     |       | VARCHAR(255)   |
 | address                 | Manufacturer     |       | TEXT           |
@@ -23,7 +24,7 @@
 | price                   | Price            |       | DECIMAL(10, 2) |
 | start_date              | Price            |       | TIMESTAMP      |
 | end_date                | Price            |       | TIMESTAMP      |
-| price_id                | Price            |       | INT            |
+| product_id              | Price            |  FK   | INT            |
 | customer_id             | Customer         |  PK   | INT            |
 | full_name               | Customer         |       | VARCHAR(255)   |
 | email                   | Customer         |       | VARCHAR(255)   |
@@ -40,6 +41,26 @@
 | order_id                | Order_Item       |  FK   | INT            |
 | product_id              | Order_Item       |  FK   | INT            |
 
+2. Добавить тип JSON в структуру.
+
+ALTER TABLE Product
+ADD description JSON;
+
+-- В поле description будет храниться вес - weight, срок реализации дней - Implementation_time_days, Энергетическая ценность в 100 г - Energy_value_per_100g. 
+
+INSERT INTO product (product_id, name, description, quantity) VALUES
+	(1, 'Колбаса Краковская', '{"weight": "1.5", "Implementation_time_days": 20, "Energy_value_per_100g": 162}', 1000),
+	(2, 'Колбаса веганская полукопчёная "Краковская"', '{"weight": "0.45", "Implementation_time_days": 10, "Energy_value_per_100g": 162}', 1300),
+	(3, 'Колбаса пшеничная "Ветчина"', '{"weight": "1.6", "Implementation_time_days": 25, "Energy_value_per_100g": 130}', 1500),
+	(4, 'Колбаса Докторская', '{"weight": "1.0", "Implementation_time_days": 8, "Energy_value_per_100g": 120}', 1800)
 
 
+SELECT name, 
+       JSON_EXTRACT(description, '$.weight') AS weight,
+       JSON_EXTRACT(description, '$.Implementation_time_days') AS implementation_time,
+       JSON_EXTRACT(description, '$.Energy_value_per_100g') AS energy_value
+FROM Product;
 
+
+SELECT * FROM Product
+WHERE CAST(JSON_EXTRACT(description, '$.weight') AS DECIMAL(10, 1)) > 1.0;
