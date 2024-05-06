@@ -11,3 +11,4 @@
 + [Создаем базу данных MySQL в докере](https://github.com/kln74/education/blob/main/DZ/DZ_9)
 + [Типы данных](https://github.com/kln74/education/blob/main/DZ/DZ_10)
 + [SQL выборка](https://github.com/kln74/education/blob/main/DZ/DZ_11)
++ [Транзакции](https://github.com/kln74/education/blob/main/DZ/DZ_12)
