@@ -1,1 +1,37 @@
+-- 1. Хранимая процедура Add_Orders предназначена для добавления заказа в базу данных и обновления количества доступных товаров в таблице Product с учетом добавленного заказа.
+
+DELIMITER //
+
+CREATE PROCEDURE Add_Orders (
+    IN p_order_id INT,
+    IN p_product_id INT,
+    IN p_quantity INT
+)
+BEGIN
+    DECLARE v_product_quantity INT;
+
+    START TRANSACTION;
+
+    -- Добавление записи в таблицу Order_Item
+    INSERT INTO Order_Item (order_id, product_id, quantity)
+    VALUES (p_order_id, p_product_id, p_quantity);
+
+    -- Получение текущего количества товара в таблице Product
+    SELECT quantity INTO v_product_quantity
+    FROM Product
+    WHERE product_id = p_product_id;
+
+    -- Изменение количества оставшегося товара в таблице Product
+    UPDATE Product
+    SET quantity = v_product_quantity - p_quantity
+    WHERE product_id = p_product_id;
+
+    COMMIT;
+END //
+
+DELIMITER ;
+
+-- 2. Загрузить данные из приложенных в материалах csv.
+
+
 
