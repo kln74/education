@@ -12,3 +12,4 @@
 + [Типы данных](https://github.com/kln74/education/blob/main/DZ/DZ_10)
 + [SQL выборка](https://github.com/kln74/education/blob/main/DZ/DZ_11)
 + [Транзакции](https://github.com/kln74/education/blob/main/DZ/DZ_12)
++ [Создаем отчетную выборку](https://github.com/kln74/education/blob/main/DZ/DZ_13)
