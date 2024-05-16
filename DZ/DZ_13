@@ -1,1 +1,102 @@
+1. Группировки с ипользованием CASE, HAVING, ROLLUP, GROUPING() :
+-- Запрос группирует продукты по их категориям и подсчитывает количество продуктов в каждой категории.
 
+SELECT
+    CASE
+        WHEN p.category_id = 1 THEN 'Electronics'
+        WHEN p.category_id = 2 THEN 'Clothing'
+        WHEN p.category_id = 3 THEN 'Books'
+        ELSE 'Other'
+    END AS category,
+    COUNT(*) AS count
+FROM
+    Product p
+GROUP BY
+    CASE
+        WHEN p.category_id = 1 THEN 'Electronics'
+        WHEN p.category_id = 2 THEN 'Clothing'
+        WHEN p.category_id = 3 THEN 'Books'
+        ELSE 'Other'
+    END;
+
+-- Запрос находит клиентов, которые сделали более 5 заказов.
+
+SELECT
+    customer_id,
+    COUNT(*) AS order_count
+FROM
+    Orders
+GROUP BY
+    customer_id
+HAVING
+    order_count > 5;
+
+-- Запрос посчитает общее количество заказов и количество заказов для каждого статуса.
+
+SELECT
+    order_status_id,
+    COUNT(*) AS order_count
+FROM
+    Orders
+GROUP BY
+    order_status_id WITH ROLLUP;
+
+-- Запрос группирует заказы по статусу и выводит количество заказов для каждого статуса.
+
+SELECT
+    CASE GROUPING(order_status_id)
+        WHEN 1 THEN 'All Statuses'
+        ELSE CAST(order_status_id AS CHAR)
+    END AS order_status,
+    COUNT(*) AS order_count
+FROM
+    Orders
+GROUP BY
+    order_status_id WITH ROLLUP;
+
+2. Для магазина к предыдущему списку продуктов добавить максимальную и минимальную цену и кол-во предложений
+
+SELECT
+    p.product_id,
+    p.name AS product_name,
+    MIN(pr.price) AS min_price,
+    MAX(pr.price) AS max_price,
+    COUNT(pr.price) AS offer_count
+FROM
+    Product p
+JOIN
+    Price pr ON p.product_id = pr.product_id
+GROUP BY
+    p.product_id, p.name;
+
+3. Сделать выборку показывающую самый дорогой и самый дешевый товар в каждой категории
+
+SELECT 
+    c.name AS category_name,
+    MIN(pr.price) AS min_price,
+    MAX(pr.price) AS max_price
+FROM 
+    Product p
+LEFT JOIN 
+    Categorie c ON p.category_id = c.category_id
+LEFT JOIN 
+    Price pr ON p.product_id = pr.product_id
+WHERE 
+    pr.end_date IS NULL
+GROUP BY 
+    c.name;
+
+4. Сделать rollup с количеством товаров по категориям
+
+SELECT 
+    CASE 
+        WHEN c.name IS NULL THEN 'Total'
+        ELSE c.name 
+    END AS category_name,
+    COUNT(p.product_id) AS product_count 
+FROM 
+    Product p
+LEFT JOIN 
+    Categorie c ON p.category_id = c.category_id
+GROUP BY 
+    c.name WITH ROLLUP; 
