@@ -1,1 +1,21 @@
+1. Cделать полнотекстовый индекс.
 
+-- меняю тип с JSON на TEXT
+ALTER TABLE Product MODIFY description TEXT;
+
+SHOW INDEX FROM Product;
+
+-- выполняю команду EXPLAIN до создания индекса
+EXPLAIN 
+SELECT product_id, name, description 
+FROM Product 
+WHERE MATCH(description) AGAINST ('колбаса');
+
+-- создаю  индекс fullindex_Product_name для таблицы product по полю description
+CREATE FULLTEXT INDEX idx_Product_name ON product (description);
+
+-- выполняю команду EXPLAIN после создания индекса
+EXPLAIN 
+SELECT product_id, name, description 
+FROM Product 
+WHERE MATCH(description) AGAINST ('колбаса');
