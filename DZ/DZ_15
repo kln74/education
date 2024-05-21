@@ -120,7 +120,7 @@ END //
 
 DELIMITER ;
 
---Права дать пользователю manager
+--4. Права дать пользователю manager
 GRANT EXECUTE ON PROCEDURE online_store_mysql.get_orders TO 'manager'@'%';
 GRANT SELECT ON online_store_mysql.* TO 'manager'@'%';
 
