@@ -1,1 +1,127 @@
+--1. Создать пользователей client, manager.
+
+CREATE USER 'client'@'%' IDENTIFIED BY 'client';
+CREATE USER 'manager'@'%' IDENTIFIED BY 'manager';
+
+--2. Создать процедуру выборки товаров с использованием различных фильтров: категория, цена, производитель, различные дополнительные параметры
+--Также в качестве параметров передавать по какому полю сортировать выборку, и параметры постраничной выдачи
+
+DELIMITER //
+
+CREATE PROCEDURE GetProducts(
+    IN in_category VARCHAR(32), 
+    IN in_price_min DECIMAL(10, 2),
+    IN in_price_max DECIMAL(10, 2),
+    IN in_manufacturer VARCHAR(32),
+    IN in_sort_field VARCHAR(32),
+    IN in_page_size INT
+)
+BEGIN
+    DECLARE start_index INT;
+    SET start_index = 0;
+    
+    SELECT p.name, c.name AS category, m.name AS manufacturer, pr.price
+    FROM product p 
+    LEFT JOIN category c ON p.FK_category=c.id 
+    LEFT JOIN manufacturer m ON p.FK_manufacturer=m.id
+    LEFT JOIN price pr ON p.id = pr.FK_product
+    WHERE pr.end_date IS NULL AND 
+          c.name = in_category AND 
+          price >= in_price_min AND
+          price <= in_price_max AND 
+          m.name = in_manufacturer
+    ORDER BY 
+          CASE 
+            WHEN in_sort_field = 'name' THEN p.name 
+            WHEN in_sort_field = 'category' THEN c.name 
+            WHEN in_sort_field = 'manufacturer' THEN m.name 
+            WHEN in_sort_field = 'price' THEN pr.price 
+            ELSE p.name 
+          END
+    LIMIT start_index, in_page_size;
+END //
+
+DELIMITER ;
+
+--дать права да запуск процедуры пользователю client
+GRANT EXECUTE ON PROCEDURE online_store_mysql.GetProducts TO 'client'@'%';
+GRANT SELECT ON online_store_mysql.* TO 'client'@'%';
+
+--3. Создать процедуру get_orders - которая позволяет просматривать отчет по продажам за определенный период (час, день, неделя) с различными уровнями группировки (по товару, по категории, по производителю).
+
+DELIMITER //
+
+CREATE PROCEDURE get_orders(
+    IN start_date TIMESTAMP,
+    IN end_date TIMESTAMP,
+    IN group_by_level VARCHAR(50)
+)
+BEGIN
+    CASE group_by_level
+        WHEN 'product' THEN
+            SELECT 
+                p.name AS product_name,
+                SUM(oi.quantity) AS total_quantity,
+                SUM(oi.quantity * pr.price) AS total_sales
+            FROM 
+                Orders o
+            JOIN 
+                Order_Item oi ON o.order_id = oi.order_id
+            JOIN 
+                Product p ON oi.product_id = p.product_id
+            JOIN 
+                Price pr ON p.product_id = pr.product_id
+            WHERE 
+                o.order_date BETWEEN start_date AND end_date
+            GROUP BY 
+                p.product_id;
+        
+        WHEN 'category' THEN
+            SELECT 
+                c.name AS category_name,
+                SUM(oi.quantity) AS total_quantity,
+                SUM(oi.quantity * pr.price) AS total_sales
+            FROM 
+                Orders o
+            JOIN 
+                Order_Item oi ON o.order_id = oi.order_id
+            JOIN 
+                Product p ON oi.product_id = p.product_id
+            JOIN 
+                Category c ON p.category_id = c.category_id
+            JOIN 
+                Price pr ON p.product_id = pr.product_id
+            WHERE 
+                o.order_date BETWEEN start_date AND end_date
+            GROUP BY 
+                c.category_id;
+        
+        WHEN 'manufacturer' THEN
+            SELECT 
+                m.name AS manufacturer_name,
+                SUM(oi.quantity) AS total_quantity,
+                SUM(oi.quantity * pr.price) AS total_sales
+            FROM 
+                Orders o
+            JOIN 
+                Order_Item oi ON o.order_id = oi.order_id
+            JOIN 
+                Product p ON oi.product_id = p.product_id
+            JOIN 
+                Manufacturer m ON p.manufacturer_id = m.manufacturer_id
+            JOIN 
+                Price pr ON p.product_id = pr.product_id
+            WHERE 
+                o.order_date BETWEEN start_date AND end_date
+            GROUP BY 
+                m.manufacturer_id;
+    END CASE;
+END //
+
+DELIMITER ;
+
+--Права дать пользователю manager
+GRANT EXECUTE ON PROCEDURE online_store_mysql.get_orders TO 'manager'@'%';
+GRANT SELECT ON online_store_mysql.* TO 'manager'@'%';
+
 
