@@ -15,3 +15,4 @@
 + [13. Создаем отчетную выборку](https://github.com/kln74/education/blob/main/DZ/DZ_13)
 + [14. Индексы](https://github.com/kln74/education/blob/main/DZ/DZ_14)
 + [15. Добавляем в базу хранимые процедуры и триггеры](https://github.com/kln74/education/blob/main/DZ/DZ_15)
++ [17. Восстановить таблицу из бэкапа](https://github.com/kln74/education/blob/main/DZ/DZ_17)
