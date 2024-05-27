@@ -1,1 +1,34 @@
+--Требуется восстановить таблицу world.city из бэкапа и выполнить оператор:
+--select count(*) from city where countrycode = 'RUS';
 
+wget https://repo.percona.com/apt/percona-release_latest.$(lsb_release -sc)_all.deb
+sudo apt update
+sudo apt install -y percona-xtrabackup-80
+sudo apt install -y qpress
+
+world_db-195395-3eff1d.sql в каталог /tmp/backups/mysqldump/base
+backup_des.xbstream.gz-195395-983f27.des3 в каталог /tmp/backups/xtrabackup/stream
+
+mysql CREATE DATABASE world;
+cd /tmp/backups/mysqldump/
+mysql -uroot world < base/world_db-195395-3eff1d.sql;
+
+openssl des3 -salt -k "password" -d -in stream/backup_des.xbstream.gz-195395-983f27.des3 \
+-out stream/backup_des.xbstream.gz
+
+gzip -d stream/backup_des.xbstream.gz
+
+xbstream -x -C /tmp/backups/xtrabackup/stream/base < stream/backup_des.xbstream
+
+sudo xtrabackup --prepare --target-dir=/tmp/backups/xtrabackup/stream/base
+
+mysql -uroot world -e "alter table city discard tablespace;"
+
+sudo cp /tmp/backups/xtrabackup/stream/base/world/city.ibd /var/lib/mysql/world
+
+sudo chown -R mysql.mysql /var/lib/mysql/world/city.ibd
+
+mysql -uroot world -e "alter table city import tablespace;"
+
+select count(*) from city where countrycode = 'RUS';
+--Результат 189.
