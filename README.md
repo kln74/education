@@ -16,3 +16,4 @@
 + [14. Индексы](https://github.com/kln74/education/blob/main/DZ/DZ_14)
 + [15. Добавляем в базу хранимые процедуры и триггеры](https://github.com/kln74/education/blob/main/DZ/DZ_15)
 + [17. Восстановить таблицу из бэкапа](https://github.com/kln74/education/blob/main/DZ/DZ_17)
++ [18. Спрогнозировать рост данных и спроектировать модель хранения и архивации](https://github.com/kln74/education/blob/main/DZ/DZ_18)
